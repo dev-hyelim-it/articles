@@ -1,39 +1,50 @@
 package com.my.articles.dao;
 
-import com.my.articles.CRUDInterface.CRUDInterface;
+import com.my.articles.dto.ArticleDTO;
 import com.my.articles.entity.Article;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
-public class ArticleDAO implements CRUDInterface {
+@Component
+@Transactional
+public class ArticleDAO {
     @Autowired
     EntityManager em;
 
-    @Override
-    public List<Article> findAll() {
-        return List.of();
+    public List<Article> getAllArticle() {
+        String sql = "SELECT a FROM Article a " +
+                "ORDER BY a.id DESC";
+
+        return em.createQuery(sql).getResultList();
     }
 
-    @Override
-    public int insert(Article article) {
-        return 0;
+    public Article getOneArticle(Long id) {
+        return em.find(Article.class, id);
     }
 
-    @Override
-    public Optional<Article> findById(Long id) {
-        return Optional.ofNullable(em.find(Article.class, id));
+    public void deleteArticle(Long id) {
+        Article article = em.find(Article.class, id);
+        em.remove(article);
     }
 
-    @Override
-    public int deleteById(Long id) {
-        return 0;
+    public void updateArticle(ArticleDTO dto) {
+        Article article = em.find(Article.class, dto.getId());
+        article.setTitle(dto.getTitle());
+        article.setContent(dto.getContent());
     }
 
-    @Override
-    public int updateById(Article article) {
-        return 0;
+    public void insertArticle(Article article) {
+        em.persist(article);
     }
 }
+
+
+
+
+
+
+
