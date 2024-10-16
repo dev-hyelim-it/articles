@@ -12,11 +12,8 @@ import java.util.List;
 
 @Service
 public class ArticleService {
-    private final ArticleDAO dao;
-
-    public ArticleService(ArticleDAO dao) {
-        this.dao = dao;
-    }
+    @Autowired
+    ArticleDAO dao;
 
     public List<ArticleDTO> getAllArticle() {
         List<Article> articles = dao.getAllArticle();
@@ -45,9 +42,5 @@ public class ArticleService {
 
     public void insertArticle(ArticleDTO dto) {
         dao.insertArticle(ArticleDTO.fromDto(dto));
-    }
-
-    public Article findByIdWithComments(Long id) {
-        return dao.findByIdWithComment(id);
     }
 }

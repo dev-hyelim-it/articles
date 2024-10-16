@@ -1,29 +1,55 @@
 package com.my.articles.controller;
 
-import com.my.articles.dto.ArticleDTO;
-import com.my.articles.entity.Article;
-import com.my.articles.entity.Comment;
-import com.my.articles.service.ArticleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.my.articles.dto.CommentDTO;
+import com.my.articles.service.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor
+@RequestMapping("/articles")
 public class CommentController {
-    @Autowired
-    ArticleService articleService;
 
-    @PostMapping("articles/{id}")
-    public String addcomment(@RequestParam Long id, @RequestParam String nickname, @RequestParam String body) {
-        Comment comment = new Comment();
-        comment.setNickname(nickname);
-        comment.setBody(body);
+    private final CommentService commentService;
 
-        Article article = articleService.findByIdWithComments(id);
-        comment.setArticle(article);
-        article.getComments().add(comment);
-        articleService.updateArticle(new ArticleDTO());
-        return "redirect:/articles/" + id;
+    @GetMapping("comments/{id}")
+    public String deleteComment(
+            @PathVariable("id")Long id) {
+        Long articleId = commentService.deleteComment(id);
+        return "redirect:/articles/" + articleId;
+    }
+
+    @PostMapping("{id}/comments")
+    public String insertComment(CommentDTO dto,
+                                @PathVariable("id")Long articleId) {
+        dto.setId(null);
+        commentService.insertComment(articleId, dto);
+        return "redirect:/articles/" + articleId;
+    }
+
+    @GetMapping("comments/view/{id}")
+    public String updateCommentView(
+            @PathVariable("id") Long commentId,
+            Model model) {
+        Map<String, Object> map = commentService.findByIdComment(commentId);
+        model.addAttribute("dto", map.get("dto"));
+        model.addAttribute("articleId", map.get("articleId"));
+        return "/articles/update_comment";
+    }
+
+    @PostMapping("{article_id}/comments/{comment_id}")
+    public String updateComment(CommentDTO dto,
+                                @PathVariable("article_id")Long article_id,
+                                @PathVariable("comment_id")Long comment_id) {
+        dto.setId(comment_id);
+        commentService.updateComment(dto);
+        return "redirect:/articles/" + article_id;
     }
 }

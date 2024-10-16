@@ -22,7 +22,10 @@ public class ArticleDTO {
                 article.getId(),
                 article.getTitle(),
                 article.getContent(),
-        article.getComments().stream().map(x -> CommentDTO.fromEntity(x)).toList()
+                article.getComments()
+                        .stream()
+                        .map(x->CommentDTO.fromEntity(x))
+                        .toList()
         );
     }
 
@@ -33,5 +36,4 @@ public class ArticleDTO {
         article.setContent(dto.getContent());
         return article;
     }
-
 }

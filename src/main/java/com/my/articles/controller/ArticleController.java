@@ -1,7 +1,6 @@
 package com.my.articles.controller;
 
 import com.my.articles.dto.ArticleDTO;
-import com.my.articles.entity.Article;
 import com.my.articles.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

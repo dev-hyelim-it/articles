@@ -22,12 +22,13 @@ public class RedirectController {
         return "/test/page";
     }
 
-    @RequestMapping(value = "requestMapping", method = RequestMethod.GET)
+    @RequestMapping(value = "requestMapping",
+            method = RequestMethod.GET)
     public String requestMapping(Model model) {
         String msg = "RequestMapping";
         model.addAttribute("msg", msg);
-//        return "redirect:/page";
-        return "test/page";
+//        return "redirect:page";
+        return "/test/page";
     }
 
     @GetMapping("modelAndView")
@@ -39,6 +40,7 @@ public class RedirectController {
 
     @GetMapping("redirectView")
     public RedirectView redirectView(RedirectAttributes redirectAttributes) {
+
         String msg = "redirectView";
         redirectAttributes.addFlashAttribute("msg", msg);
         return new RedirectView("page");
@@ -58,7 +60,7 @@ public class RedirectController {
 
     @GetMapping("redirect_2")
     public ModelAndView redirect_2() {
-        String url = "redirect:http://daum.net";
+        String url = "redirect:http://localhost:8081/main";
         return new ModelAndView(url);
     }
 }
