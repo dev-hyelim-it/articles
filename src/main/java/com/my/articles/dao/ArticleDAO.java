@@ -15,11 +15,16 @@ public class ArticleDAO {
     @Autowired
     EntityManager em;
 
+    public Article findByIdWithComment(Long id) {
+        String sql = "SELECT a FROM Article a LEFT JOIN FETCH a.comments WHERE a.id = :id";
+        return em.createQuery(sql, Article.class).setParameter("id",id).getSingleResult();
+    }
+
     public List<Article> getAllArticle() {
         String sql = "SELECT a FROM Article a " +
                 "ORDER BY a.id DESC";
-
-        return em.createQuery(sql).getResultList();
+        List<Article> articles = em.createQuery(sql).getResultList();
+        return articles;
     }
 
     public Article getOneArticle(Long id) {
